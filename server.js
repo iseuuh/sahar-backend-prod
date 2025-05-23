@@ -7,7 +7,9 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://sahar-frontend.vercel.app', 'http://localhost:3000'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://sahar-frontend.vercel.app']
+    : ['http://localhost:3000', 'https://sahar-frontend.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
