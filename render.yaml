@@ -3,17 +3,17 @@ services:
     name: sahar-backend
     env: node
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGO_URI
-        sync: false
+        fromSecret: MONGO_URI
       - key: JWT_SECRET
-        sync: false
+        fromSecret: JWT_SECRET
       - key: SENDGRID_API_KEY
-        sync: false
+        fromSecret: SENDGRID_API_KEY
       - key: SENDGRID_FROM_EMAIL
-        sync: false
+        fromSecret: SENDGRID_FROM_EMAIL
       - key: PORT
         value: 5000 
