@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const morgan = require('morgan');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -18,6 +20,9 @@ const corsOptions = {
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(morgan('dev'));
+app.use(helmet());
+app.disable('x-powered-by');
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -38,6 +43,7 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/reservations', require('./routes/reservations'));
+app.use('/api/auth', require('./routes/auth'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

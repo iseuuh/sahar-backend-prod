@@ -1,4 +1,6 @@
 const Reservation = require("../models/Reservation");
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.createReservation = async (req, res) => {
   try {
@@ -60,5 +62,43 @@ exports.getAllReservations = async (req, res) => {
       message: 'Erreur lors de la récupération des réservations',
       error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
+  }
+};
+
+exports.updateReservation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const reservation = await Reservation.findById(id);
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    reservation.status = status;
+    await reservation.save();
+    // Send email notification
+    const msg = {
+      to: reservation.email,
+      from: process.env.SENDGRID_FROM_EMAIL,
+      subject: `Reservation ${status}`,
+      text: `Your reservation has been ${status}.`
+    };
+    await sgMail.send(msg);
+    res.json({ message: 'Reservation updated', reservation });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating reservation', error: err.message });
+  }
+};
+
+exports.deleteReservation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reservation = await Reservation.findById(id);
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    await Reservation.findByIdAndDelete(id);
+    res.json({ message: 'Reservation deleted' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting reservation', error: err.message });
   }
 };

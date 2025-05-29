@@ -33,6 +33,14 @@ const ReservationSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Veuillez fournir un email valide']
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'cancelled'],
+    default: 'pending'
+  },
+  cancellationToken: {
+    type: String
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 
