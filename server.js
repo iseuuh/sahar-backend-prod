@@ -57,8 +57,8 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/reservations', require('./routes/reservations'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/reservations', require('./routes/reservations'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
