@@ -20,7 +20,12 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://sahar-frontend.vercel.app', 'https://nail-care-frontend.vercel.app', 'http://localhost:3000'],
+  origin: [
+    'https://sahar-frontend-9toxedkcp-hellomyworld123s-projects.vercel.app',
+    'https://sahar-frontend.vercel.app',
+    'https://nail-care-frontend.vercel.app',
+    'http://localhost:3000'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
