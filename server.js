@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log('Loaded JWT_SECRET:', process.env.JWT_SECRET);
 
 // Validate required environment variables
 const requiredEnvs = ['MONGO_URI'];
