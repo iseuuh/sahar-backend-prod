@@ -3,6 +3,7 @@ const router = express.Router();
 const { register, verify, forgotPassword, resetPassword } = require('../controllers/userController');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { auth } = require('../middleware/auth');
 
 router.post('/register', register);
 router.get('/verify', verify);
@@ -66,6 +67,26 @@ router.post('/login', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Une erreur est survenue lors de la connexion'
+    });
+  }
+});
+
+// Get current user
+router.get('/me', auth, async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      user: {
+        id: req.user._id,
+        email: req.user.email,
+        role: req.user.role
+      }
+    });
+  } catch (error) {
+    console.error('Get user error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue'
     });
   }
 });
