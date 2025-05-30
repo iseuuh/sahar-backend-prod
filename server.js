@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 // Validate required environment variables
-const requiredEnvs = ['MONGO_URI', 'JWT_SECRET', 'SENDGRID_API_KEY', 'SENDGRID_FROM_EMAIL'];
+const requiredEnvs = ['MONGO_URI'];
 requiredEnvs.forEach(key => {
   if (!process.env[key]) {
     console.error(`❌ Environment variable ${key} is required`);

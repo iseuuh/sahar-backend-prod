@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Reservation = require('../models/Reservation');
 const { createReservation, getAllReservations, updateReservation } = require('../controllers/reservationController');
-const { verifyToken } = require('../middleware/auth');
-const { checkRole } = require('../middleware/roleCheck');
 
 router.post('/', createReservation);
 router.get('/', getAllReservations);
-router.put('/:id', verifyToken, updateReservation);
+router.put('/:id', updateReservation);
 
 // DELETE /api/reservations/:id
 router.delete('/:id', async (req, res) => {
