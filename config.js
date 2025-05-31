@@ -15,8 +15,9 @@ const config = {
   nodeEnv: process.env.NODE_ENV || 'production',
   port: process.env.PORT || 5000,
   jwtSecret: process.env.JWT_SECRET || 'ba269224303a9b1a7cb409085ec161a1',
-  sendgridApiKey: process.env.SENDGRID_API_KEY || 'db369ae12906d6fcc0a08024fd0cfea3',
-  sendgridFromEmail: process.env.SENDGRID_FROM_EMAIL || '8c0d4706c46a9bcc23a761b041c89ff1'
+  // Format correct pour SendGrid
+  sendgridApiKey: process.env.SENDGRID_API_KEY ? `SG.${process.env.SENDGRID_API_KEY}` : 'SG.db369ae12906d6fcc0a08024fd0cfea3',
+  sendgridFromEmail: process.env.SENDGRID_FROM_EMAIL || 'contact@saharnailcare.com'
 };
 
 // Validation de la configuration
