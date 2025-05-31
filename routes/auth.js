@@ -48,23 +48,23 @@ router.post('/login', async (req, res) => {
 
     // Vérification détaillée du JWT_SECRET
     console.log('=== JWT SECRET DEBUG ===');
-    console.log('JWT Secret from config:', config.jwtSecret);
-    console.log('JWT Secret type:', typeof config.jwtSecret);
-    console.log('JWT Secret length:', config.jwtSecret ? config.jwtSecret.length : 0);
+    console.log('JWT Secret from env:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Non défini');
+    console.log('JWT Secret type:', typeof process.env.JWT_SECRET);
+    console.log('JWT Secret length:', process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0);
     console.log('========================');
 
-    if (!config.jwtSecret || typeof config.jwtSecret !== 'string' || config.jwtSecret.length === 0) {
+    if (!process.env.JWT_SECRET || typeof process.env.JWT_SECRET !== 'string' || process.env.JWT_SECRET.length === 0) {
       throw new Error(`Invalid JWT_SECRET: ${JSON.stringify({
-        exists: !!config.jwtSecret,
-        type: typeof config.jwtSecret,
-        length: config.jwtSecret ? config.jwtSecret.length : 0
+        exists: !!process.env.JWT_SECRET,
+        type: typeof process.env.JWT_SECRET,
+        length: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0
       })}`);
     }
 
     // Generate token with explicit string conversion
     const token = jwt.sign(
       { id: user._id.toString() },
-      String(config.jwtSecret),
+      String(process.env.JWT_SECRET),
       { 
         algorithm: 'HS256',
         expiresIn: '24h'
@@ -85,10 +85,10 @@ router.post('/login', async (req, res) => {
     console.error('Login error details:', {
       message: error.message,
       stack: error.stack,
-      jwtSecret: config.jwtSecret ? 'defined' : 'undefined',
-      jwtSecretLength: config.jwtSecret ? config.jwtSecret.length : 0,
-      jwtSecretType: config.jwtSecret ? typeof config.jwtSecret : 'undefined',
-      jwtSecretValue: config.jwtSecret ? config.jwtSecret.substring(0, 4) + '...' : 'undefined'
+      jwtSecret: process.env.JWT_SECRET ? 'defined' : 'undefined',
+      jwtSecretLength: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0,
+      jwtSecretType: process.env.JWT_SECRET ? typeof process.env.JWT_SECRET : 'undefined',
+      jwtSecretValue: process.env.JWT_SECRET ? process.env.JWT_SECRET.substring(0, 4) + '...' : 'undefined'
     });
     res.status(500).json({
       success: false,
