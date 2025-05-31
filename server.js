@@ -44,24 +44,31 @@ const app = express();
 // CORS configuration
 const corsOptions = {
   origin: (incomingOrigin, callback) => {
-    // Liste des domaines explicitement autorisés en prod
+    // Autoriser explicitement localhost et vos domaines prod
     const whitelist = [
       'https://sahar-frontend.vercel.app',
       'https://nail-care-frontend.vercel.app',
       'http://localhost:3000'
     ];
 
-    // Autorise tout domaine *.vercel.app (Preview & Production)
+    // ✅ 1) Si l'origin est absent (undefined) → on laisse passer
+    if (!incomingOrigin) {
+      console.log('CORS: origine undefined autorisée');
+      return callback(null, true);
+    }
+
+    // ✅ 2) Domains whitelistés ou n'importe quel *.vercel.app
     if (
       whitelist.includes(incomingOrigin) ||
       /\.vercel\.app$/.test(incomingOrigin)
     ) {
       console.log('CORS autorisé pour:', incomingOrigin);
-      callback(null, true);
-    } else {
-      console.error('CORS bloqué pour:', incomingOrigin);
-      callback(new Error(`CORS bloqué pour l'origine: ${incomingOrigin}`));
+      return callback(null, true);
     }
+
+    // ❌ 3) Tout le reste est bloqué
+    console.error('CORS bloqué pour:', incomingOrigin);
+    callback(new Error(`CORS bloqué pour l'origine: ${incomingOrigin}`));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
