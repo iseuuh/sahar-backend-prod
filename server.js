@@ -1,5 +1,13 @@
 require('dotenv').config();
 const config = require('./config');
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const path = require('path');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
 
 // Forcer la définition du JWT_SECRET dans process.env
 process.env.JWT_SECRET = config.jwtSecret;
@@ -31,14 +39,6 @@ if (missingEnvs) {
   console.error('❌ Missing required environment variables. Exiting...');
   process.exit(1);
 }
-
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const path = require('path');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const bcrypt = require('bcryptjs');
 
 const app = express();
 
