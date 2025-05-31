@@ -38,6 +38,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 
@@ -127,31 +128,25 @@ const connectDB = async () => {
 
 // Create default admin user
 const createDefaultAdmin = async () => {
-  try {
-    const User = require('./models/User');
-    const bcrypt = require('bcryptjs');
-    
-    const adminEmail = 'admin@sahar.com';
-    const adminPassword = 'Admin123!';
-    
-    // Supprimer tout admin existant pour repartir sur une donnée propre
-    await User.deleteMany({ email: adminEmail });
-    
-    // Créer l'utilisateur admin avec le mot de passe « Admin123! »
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
-    const admin = new User({
+  const adminEmail = 'admin@sahar.com';
+  const adminPassword = 'Admin123!';
+
+  // Hasher systématiquement le mot de passe
+  const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
+  // Upsert : met à jour si trouvé, sinon crée
+  await User.findOneAndUpdate(
+    { email: adminEmail },
+    {
       email: adminEmail,
       password: hashedPassword,
       isAdmin: true,
       role: 'admin'
-    });
-    await admin.save();
-    console.log('Admin user (re)créé avec succès');
-    console.log('Email :', adminEmail);
-    console.log('Password :', adminPassword);
-  } catch (error) {
-    console.error('Error creating admin user:', error);
-  }
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+
+  console.log('🛡️ Admin initialisé →', adminEmail, '/', adminPassword);
 };
 
 // Call createDefaultAdmin after MongoDB connection
