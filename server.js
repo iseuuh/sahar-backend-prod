@@ -4,6 +4,9 @@ const config = require('./config');
 // Forcer la définition du JWT_SECRET dans process.env
 process.env.JWT_SECRET = config.jwtSecret;
 
+// Définir le port
+const PORT = process.env.PORT || 5000;
+
 console.log('\n=== ENVIRONMENT VARIABLES DEBUG ===');
 console.log('Current working directory:', process.cwd());
 console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
@@ -40,12 +43,26 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    'https://sahar-frontend-9toxedkcp-hellomyworld123s-projects.vercel.app',
-    'https://sahar-frontend.vercel.app',
-    'https://nail-care-frontend.vercel.app',
-    'http://localhost:3000'
-  ],
+  origin: (incomingOrigin, callback) => {
+    // Liste des domaines explicitement autorisés en prod
+    const whitelist = [
+      'https://sahar-frontend.vercel.app',
+      'https://nail-care-frontend.vercel.app',
+      'http://localhost:3000'
+    ];
+
+    // Autorise tout domaine *.vercel.app (Preview & Production)
+    if (
+      whitelist.includes(incomingOrigin) ||
+      /\.vercel\.app$/.test(incomingOrigin)
+    ) {
+      console.log('CORS autorisé pour:', incomingOrigin);
+      callback(null, true);
+    } else {
+      console.error('CORS bloqué pour:', incomingOrigin);
+      callback(new Error(`CORS bloqué pour l'origine: ${incomingOrigin}`));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
