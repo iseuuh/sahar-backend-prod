@@ -101,9 +101,38 @@ const connectDB = async () => {
   }
 };
 
-// Start server
-const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
+// Create default admin user
+const createDefaultAdmin = async () => {
+  try {
+    const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
+    
+    const adminEmail = 'admin@sahar.com';
+    const adminPassword = 'Admin123!';
+    
+    // Supprimer tout admin existant pour repartir sur une donnée propre
+    await User.deleteMany({ email: adminEmail });
+    
+    // Créer l'utilisateur admin avec le mot de passe « Admin123! »
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const admin = new User({
+      email: adminEmail,
+      password: hashedPassword,
+      isAdmin: true,
+      role: 'admin'
+    });
+    await admin.save();
+    console.log('Admin user (re)créé avec succès');
+    console.log('Email :', adminEmail);
+    console.log('Password :', adminPassword);
+  } catch (error) {
+    console.error('Error creating admin user:', error);
+  }
+};
+
+// Call createDefaultAdmin after MongoDB connection
+connectDB().then(async () => {
+  await createDefaultAdmin();
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
     console.log('API URL: https://sahar-backend.onrender.com');

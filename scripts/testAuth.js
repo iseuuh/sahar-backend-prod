@@ -5,12 +5,12 @@ const testLogin = async () => {
     console.log('Testing login...');
     console.log('Request payload:', {
       email: 'admin@sahar.com',
-      password: 'sahar2024'
+      password: 'Admin123!'
     });
 
     const response = await axios.post('http://localhost:5000/api/auth/login', {
       email: 'admin@sahar.com',
-      password: 'sahar2024'
+      password: 'Admin123!'
     });
 
     console.log('Login successful!');
