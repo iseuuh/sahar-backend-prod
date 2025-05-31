@@ -4,32 +4,36 @@ const User = require('../models/User');
 
 const createAdmin = async () => {
   try {
-    // Connect to MongoDB
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'admin@sahar.com' });
-    if (existingAdmin) {
-      console.log('Admin user already exists');
-      process.exit(0);
+    // Check if admin exists
+    const admin = await User.findOne({ email: 'admin@sahar.com' });
+    if (admin) {
+      console.log('\nAdmin user already exists:');
+      console.log('Email:', admin.email);
+      console.log('Role:', admin.role);
+      console.log('Created at:', admin.createdAt);
+      console.log('Updated at:', admin.updatedAt);
+      console.log('ID:', admin._id);
+      return;
     }
 
     // Create admin user
-    const admin = new User({
+    const adminUser = new User({
       email: 'admin@sahar.com',
       password: 'sahar2024',
       role: 'admin'
     });
 
-    await admin.save();
+    await adminUser.save();
     console.log('Admin user created successfully');
-
   } catch (error) {
-    console.error('Error creating admin:', error);
+    console.error('Error:', error);
   } finally {
     await mongoose.disconnect();
-    process.exit(0);
+    console.log('Disconnected from MongoDB');
   }
 };
 

@@ -1,14 +1,33 @@
 require('dotenv').config();
-console.log('Loaded JWT_SECRET:', process.env.JWT_SECRET);
+const config = require('./config');
+
+// Forcer la définition du JWT_SECRET dans process.env
+process.env.JWT_SECRET = config.jwtSecret;
+
+console.log('\n=== ENVIRONMENT VARIABLES DEBUG ===');
+console.log('Current working directory:', process.cwd());
+console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
+console.log('JWT_SECRET length:', process.env.JWT_SECRET.length);
+console.log('MONGO_URI exists:', !!process.env.MONGO_URI);
+console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('===============================\n');
 
 // Validate required environment variables
 const requiredEnvs = ['MONGO_URI'];
+let missingEnvs = false;
 requiredEnvs.forEach(key => {
   if (!process.env[key]) {
-    console.error(`❌ Environment variable ${key} is required`);
-    process.exit(1);
+    console.error(`❌ Environment variable ${key} is required but not set`);
+    missingEnvs = true;
+  } else {
+    console.log(`✓ Environment variable ${key} is set`);
   }
 });
+
+if (missingEnvs) {
+  console.error('❌ Missing required environment variables. Exiting...');
+  process.exit(1);
+}
 
 const express = require('express');
 const cors = require('cors');
