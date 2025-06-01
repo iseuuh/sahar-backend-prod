@@ -44,26 +44,24 @@ if (missingEnvs) {
 const app = express();
 
 // CORS configuration (autorise production + previews Vercel + localhost)
+const allowedOrigins = [
+  "https://sahar-frontend.vercel.app",
+  "https://sahar-frontend-git-main-hellomyworld123s-projects.vercel.app",
+  "https://sahar-frontend-git-sahar-v2-hellomyworld123s-projects.vercel.app",
+  "http://localhost:3000"
+];
+
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin) {
-      // pour les requêtes depuis Postman/curl sans origine
-      return callback(null, true);
-    }
-    const whitelist = [
-      "https://sahar-frontend.vercel.app",
-      "https://sahar-frontend-git-main-hellomyworld123s-projects.vercel.app",
-      "https://sahar-frontend-gna1qxhnn-hellomyworld123s-projects.vercel.app",
-      "http://localhost:3000"
-    ];
-    if (whitelist.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS bloqué pour l'origine : ${origin}`));
+      console.error("CORS bloqué pour :", origin);
+      callback(new Error("CORS bloqué pour l'origine: " + origin));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET","POST","PATCH","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"],
   credentials: true
 };
 app.use(cors(corsOptions));
