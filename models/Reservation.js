@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ReservationSchema = new mongoose.Schema({
+const reservationSchema = new mongoose.Schema({
   service: {
     type: String,
     required: [true, 'Le service est requis'],
@@ -24,7 +24,8 @@ const ReservationSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, 'Le numéro de téléphone est requis'],
-    trim: true
+    trim: true,
+    match: [/^\d{8}$/, "Le numéro de téléphone doit contenir exactement 8 chiffres (format tunisien)"]
   },
   email: {
     type: String,
@@ -41,10 +42,13 @@ const ReservationSchema = new mongoose.Schema({
   cancellationToken: {
     type: String
   },
+  notes: {
+    type: String,
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Reservation', ReservationSchema);
+module.exports = mongoose.model('Reservation', reservationSchema);

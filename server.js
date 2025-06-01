@@ -43,34 +43,22 @@ if (missingEnvs) {
 
 const app = express();
 
-// CORS configuration
+// **1) CONFIGURATION CORS : autoriser FRONTEND v2**
+const allowedOrigins = [
+  'https://sahar-frontend.vercel.app',
+  'https://sahar-frontend-git-sahar-v2-hellomyworld123s-projects.vercel.app',
+  'http://localhost:3000'
+];
+
 const corsOptions = {
-  origin: (incomingOrigin, callback) => {
-    // Autoriser explicitement localhost et vos domaines prod
-    const whitelist = [
-      'https://sahar-frontend.vercel.app',
-      'https://sahar-frontend-g5vdy3jb6-hellomyworld123s-projects.vercel.app',
-      'http://localhost:3000'
-    ];
-
-    // ✅ 1) Si l'origin est absent (undefined) → on laisse passer
-    if (!incomingOrigin) {
-      console.log('CORS: origine undefined autorisée');
-      return callback(null, true);
+  origin: (origin, callback) => {
+    // Pour les outils comme Postman, origin peut être undefined, on autorise dans ce cas.
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error('CORS bloqué pour :', origin);
+      callback(new Error(`CORS bloqué pour l'origine : ${origin}`));
     }
-
-    // ✅ 2) Domains whitelistés ou n'importe quel *.vercel.app
-    if (
-      whitelist.includes(incomingOrigin) ||
-      /\.vercel\.app$/.test(incomingOrigin)
-    ) {
-      console.log('CORS autorisé pour:', incomingOrigin);
-      return callback(null, true);
-    }
-
-    // ❌ 3) Tout le reste est bloqué
-    console.error('CORS bloqué pour:', incomingOrigin);
-    callback(new Error(`CORS bloqué pour l'origine: ${incomingOrigin}`));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
