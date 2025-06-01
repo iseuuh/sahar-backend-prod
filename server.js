@@ -43,31 +43,32 @@ if (missingEnvs) {
 
 const app = express();
 
-// **1) CONFIGURATION CORS : autoriser FRONTEND v2**
-const allowedOrigins = [
-  'https://sahar-frontend.vercel.app',
-  'https://sahar-frontend-git-sahar-v2-hellomyworld123s-projects.vercel.app',
-  'http://localhost:3000'
-];
-
+// CORS configuration (autorise production + previews Vercel + localhost)
 const corsOptions = {
   origin: (origin, callback) => {
-    // Pour les outils comme Postman, origin peut être undefined, on autorise dans ce cas.
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) {
+      // pour les requêtes depuis Postman/curl sans origine
+      return callback(null, true);
+    }
+    const whitelist = [
+      "https://sahar-frontend.vercel.app",
+      "https://sahar-frontend-git-main-hellomyworld123s-projects.vercel.app",
+      "https://sahar-frontend-gna1qxhnn-hellomyworld123s-projects.vercel.app",
+      "http://localhost:3000"
+    ];
+    if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
-      console.error('CORS bloqué pour :', origin);
       callback(new Error(`CORS bloqué pour l'origine : ${origin}`));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 };
+app.use(cors(corsOptions));
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(helmet());
