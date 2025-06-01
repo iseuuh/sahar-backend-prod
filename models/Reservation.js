@@ -44,11 +44,15 @@ const reservationSchema = new mongoose.Schema({
   },
   notes: {
     type: String,
+    default: ""
   },
   createdAt: { 
     type: Date, 
     default: Date.now 
   }
 }, { timestamps: true });
+
+// Ajoutez cet index pour interdire la création de deux réservations exactement au même créneau
+reservationSchema.index({ date: 1, time: 1 }, { unique: true });
 
 module.exports = mongoose.model('Reservation', reservationSchema);
