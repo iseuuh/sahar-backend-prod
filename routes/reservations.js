@@ -37,6 +37,13 @@ router.post('/', async (req, res) => {
 // GET toutes réservations (pour l'admin)
 router.get('/', async (req, res) => {
   try {
+    const { date } = req.query;
+    if (date) {
+      // Retourner toutes les réservations pour une date donnée (tous statuts)
+      const list = await Reservation.find({ date }).sort({ time: 1 });
+      return res.status(200).json({ success: true, data: list });
+    }
+    // Sinon, retourner toutes les réservations (admin)
     const list = await Reservation.find().sort({ date: 1, time: 1 });
     res.status(200).json({ success: true, data: list });
   } catch (err) {
