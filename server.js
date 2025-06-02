@@ -45,13 +45,8 @@ const app = express();
 
 // CORS configuration (autorise production + previews Vercel + localhost)
 const allowedOrigins = [
-  "https://sahar-frontend.vercel.app",
-  "https://sahar-frontend-git-main-hellomyworld123s-projects.vercel.app",
-  "https://sahar-frontend-git-sahar-v2-hellomyworld123s-projects.vercel.app",
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  "http://localhost:5173",
-  "http://127.0.0.1:5173"
+  "https://sahar-frontend-prod.vercel.app",
+  "http://localhost:5173"
 ];
 
 const corsOptions = {
