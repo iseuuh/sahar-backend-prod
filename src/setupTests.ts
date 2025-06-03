@@ -1,0 +1,2 @@
+// setupTests TypeScript minimal
+export {}; 

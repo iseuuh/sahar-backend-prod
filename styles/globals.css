@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background-color: #0D0D0D;
+  color: #C9A66B;
+}
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+.bg-marble {
+  background: url('/images/marble-bg.png') center/cover no-repeat;
+} 
